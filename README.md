@@ -2,7 +2,7 @@
 
 Execute long running tasks on `NextJS` edge API handlers.
 
-## Usage
+## Usage example
 
 On the server:
 
