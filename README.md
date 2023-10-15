@@ -8,29 +8,20 @@ Execute long running tasks on `NextJS` edge API handlers.
 sequenceDiagram
     participant Client
     participant Server
-    participant SSE
 
     Client->>Server: Make a request
-    Server->>SSE: Create SSE connection
-    Server->>Client: Send SSE headers
-    Server->>Client: Send initial data
+    Server->>Client: Establish SSE connection
 
     loop Processing
-        Server->>SSE: Send wait event
-        Server-->>SSE: Processing...
-        Note right of SSE: Processing...
-    end
-
-    alt Error
-        Server--xSSE: An error occurred
-        Server->>Client: Send error event
-        Client->>Server: Handle error
-    else Settle
-        Server->>SSE: Send settle event
-        Server->>Client: Send final data
-        Client->>Server: Handle settle
+        Server-->>Client: Send "wait" events (while processing)
+        Server--xClient: An error occurred
+        Server->>Client: Send "server-error" or "internal-error" event
+        Server-->>Client: Send "settle" event (processing finished)
     end
 ```
+
+We can keep the connection alive thanks we use [Server Sent Events](https://web.dev/articles/eventsource-basics), while the
+task is running we sent a `wait` event each 300ms (this can be changed) to notify we still processing, if not error happened we send a `settle` event with the data, if an error ocurred we send an `internal-error` if the error was unexpected or a `server-error` of the error was throw using `TaskError`, these errors are rethrow on the client and the connection is closed.
 
 ## Usage example
 
