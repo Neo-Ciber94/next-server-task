@@ -66,7 +66,7 @@ class ServerTaskBuilder<TRoute extends string> {
   /**
    * Adds the action to execute when this task is called and returns the `ServerTask`.
    */
-  withAction<TReturn, TInput>(
+  withAction<TReturn, TInput = undefined>(
     action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>
   ): ServerTask<TReturn, TInput, TRoute> {
     const _route = this.route;
@@ -113,9 +113,9 @@ function createServerHandler<TReturn, TInput>(
 ) {
   if (!isEdgeRuntime()) {
     throw new Error(`Server tasks can only be used in the 'edge-runtime'. To enable it, add in your api route:
-  
-      export const runtime = 'edge';
-      `);
+
+    export const runtime = 'edge';
+    `);
   }
 
   return async (req: Request) => {

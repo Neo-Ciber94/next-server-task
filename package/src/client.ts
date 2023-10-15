@@ -31,10 +31,11 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
   type TInput = T extends ServerTask<unknown, infer U, string> ? U : never;
   type TReturn = T extends ServerTask<infer U, unknown, string> ? U : never;
   type TRoute = T extends ServerTask<unknown, unknown, infer U> ? U : never;
+  type Args = TInput extends undefined ? [input?: TInput] : [input: TInput];
 
   const { transformer = defaultTransformer, requestInit } = opts || {};
 
-  const receiveStream = async (route: TRoute, input: TInput) => {
+  const receiveStream = async (route: TRoute, input?: TInput) => {
     /**
      * We would like to use `POST` here instead, but when the request is aborted, we get an error:
      *    ⨯ uncaughtException: Error: aborted
@@ -76,7 +77,8 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
       const [isMutating, setIsMutating] = useState(false);
 
       const mutate = useCallback(
-        async (input: TInput) => {
+        async (...args: Args) => {
+          const [input] = args;
           setIsMutating(true);
 
           try {
@@ -103,7 +105,7 @@ async function makeRequest<TInput>({
   route,
   requestInit,
 }: {
-  input: TInput;
+  input: TInput | undefined;
   method: "GET" | "POST";
   route: string;
   requestInit?: Omit<RequestInit, "method" | "body">;
