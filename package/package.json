@@ -5,8 +5,9 @@
   "author": "Freddy L.",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build"
   },
@@ -19,7 +20,6 @@
     "vercel",
     "rpc"
   ],
-  "license": "ISC",
   "dependencies": {
     "eventsource-parser": "^1.1.1",
     "react": "^18.2.0"

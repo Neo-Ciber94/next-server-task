@@ -2,6 +2,12 @@
 
 Execute long running tasks on `NextJS` edge API handlers.
 
+## Table of contents
+
+1. [How it works?](#how-it-works)
+2. [Usage example](#usage-example)
+3. [License](#license)
+
 ## How it works?
 
 ```mermaid
@@ -114,6 +120,50 @@ export default function ImageGenerator() {
     </div>
 }
 ```
+
+## Accessing the request with TaskServerContext
+
+You can access the requests in the task using the `TaskServerContext`.
+
+```ts
+// server
+const myTask = createTask("/api/my-task").withAction((_, ctx) => {
+    const url = ctx.req.url;
+    return { url };
+})
+```
+
+## TaskError
+
+You can throw expected errors using `TaskError`, this errors are rethrow on the client side as a `TaskClientError` so can be handled in a `try-catch` block.
+
+```ts
+// server
+const myTask = createTask("/api/my-task").withAction(() => {
+    const randomNumber = Math.random();
+    if (randomNumber > 0.5) {
+        throw new TaskError("Uh uh, invalid number");
+    }
+
+    return { randomNumber };
+})
+```
+
+```ts
+// client
+const { mutate, isMutating} = useTask("/api/my-task");
+
+try {
+    const { randomNumber } = mutate();
+    console.log(randomNumber);
+}
+catch (err) {
+    if (err instanceof TaskClientError) {
+        console.log(err.message, err.code);
+    }
+}
+```
+
 
 ## License
 
