@@ -43,7 +43,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
      *
      * This error for some reason does not occurs with `GET`
      */
-    const res = await makeRequest({
+    const res = await fetchEventStream({
       method: "GET",
       input,
       route,
@@ -99,7 +99,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
   };
 }
 
-async function makeRequest<TInput>({
+async function fetchEventStream<TInput>({
   input,
   method,
   route,
