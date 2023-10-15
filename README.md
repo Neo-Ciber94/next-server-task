@@ -2,7 +2,41 @@
 
 Execute long running tasks on `NextJS` edge API handlers.
 
+## How it works?
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant SSE
+
+    Client->>Server: Make a request
+    Server->>SSE: Create SSE connection
+    Server->>Client: Send SSE headers
+    Server->>Client: Send initial data
+
+    loop Processing
+        Server->>SSE: Send wait event
+        Server-->>SSE: Processing...
+        Note right of SSE: Processing...
+    end
+
+    alt Error
+        Server--xSSE: An error occurred
+        Server->>Client: Send error event
+        Client->>Server: Handle error
+    else Settle
+        Server->>SSE: Send settle event
+        Server->>Client: Send final data
+        Client->>Server: Handle settle
+    end
+```
+
 ## Usage example
+
+In this example we use the **OpenAI** to generate images which can take a long time to generate the images,
+this usually led to timeouts when using platforms like vercel, but using `next-server-task` we can wait until the task
+finish and send the result after that.
 
 On the server:
 
@@ -89,3 +123,7 @@ export default function ImageGenerator() {
     </div>
 }
 ```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
