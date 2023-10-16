@@ -153,7 +153,7 @@ You can throw expected errors using `TaskError`, this errors are rethrow on the 
 const myTask = createTask("/api/my-task").withAction(() => {
     const randomNumber = Math.random();
     if (randomNumber > 0.5) {
-        throw new TaskError("Uh uh, invalid number");
+        throw new TaskError("Invalid number");
     }
 
     return { randomNumber };
