@@ -1,14 +1,33 @@
 # next-server-task
 
+[![CI](https://github.com/Neo-Ciber94/next-server-task/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo-Ciber94/next-server-task/actions/workflows/ci.yml)
+
 Execute long running tasks on `NextJS` edge API handlers.
+
+You can also checkout this [Example](https://github.com/Neo-Ciber94/next-server-task/tree/main/examples/openai-image-generator).
 
 ## Table of contents
 
-1. [How it works?](#how-it-works)
-2. [Usage example](#usage-example)
-3. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
-4. [TaskError](#taskerror)
-5. [License](#license)
+1. [Install](#install)
+2. [How it works?](#how-it-works)
+3. [Usage example](#usage-example)
+4. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
+5. [TaskError](#taskerror)
+6. [License](#license)
+
+## Install
+
+```bash
+npm install next-server-task
+```
+
+```bash
+yarn add next-server-task
+```
+
+```bash
+pnpm add next-server-task
+```
 
 ## How it works?
 
@@ -40,7 +59,7 @@ finish and send the result after that.
 On the server:
 
 ```ts
-// app/api/generate-image/route.tsx
+// app/api/generate-image/route.ts
 
 import { TaskError } from "next-server-task";
 import { createTask } from "next-server-task/server";
