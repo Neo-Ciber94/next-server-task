@@ -4,11 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   overrides: [
     {
       env: {
@@ -27,14 +23,8 @@ module.exports = {
     sourceType: "module",
     project: ["./package/tsconfig.json", "./tsconfig.json"],
   },
-  plugins: ["@typescript-eslint", "react"],
+  plugins: ["@typescript-eslint"],
   rules: {
-    "prettier/prettier": [
-      "error",
-      {
-        endOfLine: "auto",
-      },
-    ],
     "require-await": "off",
     "@typescript-eslint/require-await": "error",
     "@typescript-eslint/no-floating-promises": "error",

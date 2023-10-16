@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { ServerTask } from "./server";
+import { type ServerTask } from "./server";
 import {
-  EventType,
+  type EventType,
+  type Transformer,
   TaskClientError,
-  Transformer,
   defaultTransformer,
 } from "./common";
 import { EventSourceParserStream } from "eventsource-parser/stream";
@@ -26,7 +26,7 @@ export type CreateClientOptions = {
 };
 
 export function createClient<T extends ServerTask<unknown, unknown, string>>(
-  opts?: CreateClientOptions,
+  opts?: CreateClientOptions
 ) {
   type TInput = T extends ServerTask<unknown, infer U, string> ? U : never;
   type TReturn = T extends ServerTask<infer U, unknown, string> ? U : never;
@@ -88,7 +88,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
             setIsMutating(false);
           }
         },
-        [route],
+        [route]
       );
 
       return {
@@ -141,7 +141,7 @@ async function getResponseError(res: Response) {
 
 async function parseEventStream<T>(
   streamReader: ReadableStream<Uint8Array>,
-  transformer: Transformer,
+  transformer: Transformer
 ) {
   const eventStream = streamReader
     .pipeThrough(new TextDecoderStream())
@@ -149,6 +149,7 @@ async function parseEventStream<T>(
 
   const reader = eventStream.getReader();
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     // We ignore the `done`, value, we immediately exit on the `settle` event
     const { value: event } = await reader.read();

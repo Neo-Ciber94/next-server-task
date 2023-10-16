@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   type Transformer,
+  type EventType,
   defaultTransformer,
   TaskError,
-  EventType,
 } from "./common";
 
+// eslint-disable-next-line no-var
 declare var EdgeRuntime: string | undefined;
 
 function isEdgeRuntime() {
@@ -15,7 +17,7 @@ const encoder = new TextEncoder();
 
 type RequestHandler = (
   req: Request,
-  params: { params: Record<string, string | undefined> },
+  params: { params: Record<string, string | undefined> }
 ) => Promise<Response>;
 
 /**
@@ -75,7 +77,7 @@ class ServerTaskBuilder<TRoute extends string> {
    * Adds the action to execute when this task is called and returns the `ServerTask`.
    */
   withAction<TReturn, TInput = undefined>(
-    action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>,
+    action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>
   ): ServerTask<TReturn, TInput, TRoute> {
     const _route = this.route;
     const _transformer = this.transformer;
@@ -117,7 +119,7 @@ export function createTask<TRoute extends string>(route: TRoute) {
 
 function createServerHandler<TReturn, TInput>(
   transformer: Transformer,
-  action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>,
+  action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>
 ) {
   if (!isEdgeRuntime()) {
     throw new Error(`Server tasks can only be used in the 'edge-runtime'. To enable it, add in your api route:
@@ -128,7 +130,7 @@ function createServerHandler<TReturn, TInput>(
 
   return async (
     req: Request,
-    { params }: { params: Record<string, string | undefined> },
+    { params }: { params: Record<string, string | undefined> }
   ) => {
     try {
       const input = await getInput<TInput>(req, transformer);
@@ -152,9 +154,10 @@ function createServerHandler<TReturn, TInput>(
           "Content-Type": "text/event-stream",
         },
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      const message = err?.message ?? "Something went wrong";
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
 
       return new Response(JSON.stringify({ message }), {
         status: 500,
@@ -176,7 +179,7 @@ type EventStreamOptions<TReturn, TInput> = {
 };
 
 function createEventStream<TReturn, TInput>(
-  opts: EventStreamOptions<TReturn, TInput>,
+  opts: EventStreamOptions<TReturn, TInput>
 ) {
   const { input, action, transformer, waitInterval = 300, req, params } = opts;
 
@@ -214,7 +217,7 @@ function createEventStream<TReturn, TInput>(
         const data = await action(input, ctx);
         const json = transformer.stringify(data);
         emit("settle", json);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
 
         // We only send to the client `TaskError`s
@@ -225,12 +228,10 @@ function createEventStream<TReturn, TInput>(
           emit("internal-error", '"Internal Error"');
         }
       } finally {
-        if (done) {
-          return;
+        if (!done) {
+          abortController.abort();
+          controller.close();
         }
-
-        abortController.abort();
-        controller.close();
       }
     },
     cancel() {
@@ -243,7 +244,7 @@ function createEventStream<TReturn, TInput>(
 
 async function getInput<TInput>(
   req: Request,
-  transformer: Transformer,
+  transformer: Transformer
 ): Promise<TInput | undefined> {
   if (req.method === "GET" || req.method === "HEAD") {
     const { searchParams } = new URL(req.url);
