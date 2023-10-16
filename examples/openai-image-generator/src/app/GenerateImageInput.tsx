@@ -23,9 +23,11 @@ export default function GenerateImageInput() {
     try {
       const result = await mutate({ prompt });
       setImageUrl(result.url);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err?.message ?? "Something went wrong");
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      setError(message);
     }
   };
 
