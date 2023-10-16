@@ -19,6 +19,7 @@
   },
   "scripts": {
     "format": "prettier \"**/*\" --ignore-unknown --write",
-    "lint": "eslint ./package/src"
+    "lint": "eslint ./package/src",
+    "typecheck": "cd package && pnpm typecheck"
   }
 }
