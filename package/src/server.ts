@@ -184,7 +184,7 @@ function createEventStream<TReturn, TInput>(
   const { input, action, transformer, waitInterval = 300, req, params } = opts;
 
   const abortController = new AbortController();
-  let intervalId: number | undefined;
+  let intervalId: NodeJS.Timeout | undefined;
   let done = false;
 
   // Cleanup
