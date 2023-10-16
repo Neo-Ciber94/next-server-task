@@ -4,13 +4,16 @@
 
 Execute long running tasks on `NextJS` edge API handlers.
 
+You can also checkout this [Example](https://github.com/Neo-Ciber94/next-server-task/tree/main/examples/openai-image-generator).
+
 ## Table of contents
 
-1. [How it works?](#how-it-works)
-2. [Usage example](#usage-example)
-3. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
-4. [TaskError](#taskerror)
-5. [License](#license)
+1. [Install](#install)
+2. [How it works?](#how-it-works)
+3. [Usage example](#usage-example)
+4. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
+5. [TaskError](#taskerror)
+6. [License](#license)
 
 ## Install
 
