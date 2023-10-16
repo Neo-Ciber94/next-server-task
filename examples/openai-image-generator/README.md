@@ -1,36 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# next-server-task example
 
-## Getting Started
+This is an example of the usage of `next-server-task`.
 
-First, run the development server:
+## Timeout
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+When deploying to vercel you may receive a timeout after `25 seconds` of running an edge function.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Using `next-server-task` you can run a long computation, and using *Server Sent Events* we send `wait` messages until the computation is `settle` and them send the result to the client.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![Vercel Timeout Comparison](/assets/vercel-timeout-test.mp4)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+For some reason vercel return `405` on edge timeout, but in the logs it display it correctly.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Vercel Timeout](/assets/edge-timeout.jpg)
