@@ -21,7 +21,6 @@
   "scripts": {
     "format": "prettier \"**/*\" --ignore-unknown --write",
     "lint": "eslint ./package/src",
-    "typecheck": "cd package && pnpm typecheck",
-    "publish:npm": "npx lerna publish --no-private"
+    "typecheck": "cd package && pnpm typecheck"
   }
 }
