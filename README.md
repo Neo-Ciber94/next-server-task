@@ -1,5 +1,7 @@
 # next-server-task
 
+[![CI](https://github.com/Neo-Ciber94/next-server-task/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo-Ciber94/next-server-task/actions/workflows/ci.yml)
+
 Execute long running tasks on `NextJS` edge API handlers.
 
 ## Table of contents
@@ -9,6 +11,20 @@ Execute long running tasks on `NextJS` edge API handlers.
 3. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
 4. [TaskError](#taskerror)
 5. [License](#license)
+
+## Install
+
+```bash
+npm install next-server-task
+```
+
+```bash
+yarn add next-server-task
+```
+
+```bash
+pnpm add next-server-task
+```
 
 ## How it works?
 
