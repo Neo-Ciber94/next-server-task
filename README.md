@@ -59,7 +59,7 @@ finish and send the result after that.
 On the server:
 
 ```ts
-// app/api/generate-image/route.tsx
+// app/api/generate-image/route.ts
 
 import { TaskError } from "next-server-task";
 import { createTask } from "next-server-task/server";
