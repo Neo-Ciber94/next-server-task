@@ -1,28 +1,27 @@
-
 name: CI
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "*" ]
+    branches: ["*"]
   pull_request:
-    branches: [ "*" ]
+    branches: ["*"]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
-    - name: Install dependencies
-      run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-    - name: Check types
-      run: pnpm typecheck
+      - name: Check types
+        run: pnpm typecheck
 
-    - name: Linting
-      run: pnpm lint
+      - name: Linting
+        run: pnpm lint

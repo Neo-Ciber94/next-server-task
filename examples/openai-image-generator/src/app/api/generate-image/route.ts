@@ -22,7 +22,7 @@ const generateImage = createTask("/api/generate-image").withAction(
     }
 
     return { url };
-  },
+  }
 );
 
 export type GenerateImage = typeof generateImage;
