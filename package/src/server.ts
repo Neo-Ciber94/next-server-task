@@ -133,15 +133,15 @@ function createServerHandler<TReturn, TInput>(
     { params }: { params: Record<string, string | undefined> }
   ) => {
     try {
-      const input = await getInput<TInput>(req, transformer);
+      const data = await getInput<TInput>(req, transformer);
 
-      if (!input) {
+      if (!data) {
         return new Response(undefined, { status: 429 });
       }
 
       const stream = createEventStream({
         transformer,
-        input,
+        input: data.input,
         action,
         req,
         params,
@@ -245,7 +245,7 @@ function createEventStream<TReturn, TInput>(
 async function getInput<TInput>(
   req: Request,
   transformer: Transformer
-): Promise<TInput | undefined> {
+): Promise<{ input: TInput } | undefined> {
   if (req.method === "GET" || req.method === "HEAD") {
     const { searchParams } = new URL(req.url);
     const rawInput = searchParams.get("input");
@@ -255,10 +255,10 @@ async function getInput<TInput>(
     }
 
     const input = transformer.parse(rawInput) as TInput;
-    return input;
+    return { input };
   } else {
     const rawInput = await req.text();
-    const data = transformer.parse(rawInput) as { input?: TInput } | undefined;
-    return data?.input;
+    const data = transformer.parse(rawInput) as { input: TInput } | undefined;
+    return data;
   }
 }
