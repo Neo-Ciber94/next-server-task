@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 const generateImage = createTask("/api/generate-image").withAction(
   async ({ prompt }: { prompt: string }) => {
-    console.log(`🕑 Generating image for: ${prompt}\n`);
+    console.log(`🕑 Generating image for: ${prompt}`);
 
     const openAPI = new OpenAI();
     const results = await openAPI.images.generate({

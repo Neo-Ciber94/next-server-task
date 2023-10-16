@@ -114,7 +114,7 @@ async function fetchEventStream<TInput>({
 
   // prettier-ignore
   const path = method === "GET" ? `${route}?input=${JSON.stringify(input)}` : route;
-  const body = method === "GET" ? undefined : JSON.stringify(input);
+  const body = method === "GET" ? undefined : JSON.stringify({ input });
   const headers = new Headers(requestHeaders);
 
   const res = await fetch(path, {

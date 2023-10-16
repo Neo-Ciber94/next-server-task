@@ -13,7 +13,10 @@ function isEdgeRuntime() {
 
 const encoder = new TextEncoder();
 
-type RequestHandler = (req: Request) => Promise<Response>;
+type RequestHandler = (
+  req: Request,
+  params: { params: Record<string, string | undefined> }
+) => Promise<Response>;
 
 /**
  * Context to pass to each server task.
@@ -26,6 +29,11 @@ export type ServerTaskContext = {
     Request,
     "body" | "json" | "text" | "blob" | "arrayBuffer" | "formData"
   >;
+
+  /**
+   * The request params.
+   */
+  params: Record<string, string | undefined>;
 };
 
 /**
@@ -118,14 +126,23 @@ function createServerHandler<TReturn, TInput>(
     `);
   }
 
-  return async (req: Request) => {
+  return async (
+    req: Request,
+    { params }: { params: Record<string, string | undefined> }
+  ) => {
     try {
       const input = await getInput<TInput>(req, transformer);
+
+      if (!input) {
+        return new Response(undefined, { status: 429 });
+      }
+
       const stream = createEventStream({
         transformer,
         input,
         action,
         req,
+        params,
       });
 
       return new Response(stream, {
@@ -155,12 +172,13 @@ type EventStreamOptions<TReturn, TInput> = {
   action: (args: TInput, ctx: ServerTaskContext) => Promise<TReturn>;
   waitInterval?: number;
   req: Request;
+  params: Record<string, string | undefined>;
 };
 
 function createEventStream<TReturn, TInput>(
   opts: EventStreamOptions<TReturn, TInput>
 ) {
-  const { input, action, transformer, waitInterval = 300, req } = opts;
+  const { input, action, transformer, waitInterval = 300, req, params } = opts;
 
   const abortController = new AbortController();
   let intervalId: number | undefined;
@@ -192,7 +210,7 @@ function createEventStream<TReturn, TInput>(
       });
 
       try {
-        const ctx: ServerTaskContext = { req };
+        const ctx: ServerTaskContext = { req, params };
         const data = await action(input, ctx);
         const json = transformer.stringify(data);
         emit("settle", json);
@@ -223,7 +241,10 @@ function createEventStream<TReturn, TInput>(
   return stream;
 }
 
-async function getInput<TInput>(req: Request, transformer: Transformer) {
+async function getInput<TInput>(
+  req: Request,
+  transformer: Transformer
+): Promise<TInput | undefined> {
   if (req.method === "GET" || req.method === "HEAD") {
     const { searchParams } = new URL(req.url);
     const rawInput = searchParams.get("input");
@@ -236,7 +257,7 @@ async function getInput<TInput>(req: Request, transformer: Transformer) {
     return input;
   } else {
     const rawInput = await req.text();
-    const input = transformer.parse(rawInput) as TInput;
-    return input;
+    const data = transformer.parse(rawInput) as { input?: TInput } | undefined;
+    return data?.input;
   }
 }

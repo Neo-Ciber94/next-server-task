@@ -6,7 +6,9 @@ Execute long running tasks on `NextJS` edge API handlers.
 
 1. [How it works?](#how-it-works)
 2. [Usage example](#usage-example)
-3. [License](#license)
+3. [Accessing the request with TaskServerContext](#accessing-the-request-with-taskservercontext)
+4. [TaskError](#taskerror)
+5. [License](#license)
 
 ## How it works?
 
@@ -123,7 +125,16 @@ export default function ImageGenerator() {
 
 ## Accessing the request with TaskServerContext
 
-You can access the requests in the task using the `TaskServerContext`.
+You can access the request in the task using the `TaskServerContext`.
+
+The `TaskServerContext` had this shape:
+
+```ts
+type TaskServerContext = {
+    req: Request,
+    params: Record<string, string | undefined>
+}
+```
 
 ```ts
 // server
@@ -163,7 +174,6 @@ catch (err) {
     }
 }
 ```
-
 
 ## License
 
