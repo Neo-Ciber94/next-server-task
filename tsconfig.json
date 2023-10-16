@@ -13,15 +13,8 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "bundler",
     "module": "esnext",
-    "lib": [
-      "esnext",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
     "paths": {}
   },
-  "exclude": [
-    "**/**/*.test.ts",
-    "**/**/*.spec.ts"
-  ]
+  "exclude": ["**/**/*.test.ts", "**/**/*.spec.ts"]
 }

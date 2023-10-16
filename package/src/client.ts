@@ -26,7 +26,7 @@ export type CreateClientOptions = {
 };
 
 export function createClient<T extends ServerTask<unknown, unknown, string>>(
-  opts?: CreateClientOptions
+  opts?: CreateClientOptions,
 ) {
   type TInput = T extends ServerTask<unknown, infer U, string> ? U : never;
   type TReturn = T extends ServerTask<infer U, unknown, string> ? U : never;
@@ -88,7 +88,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
             setIsMutating(false);
           }
         },
-        [route]
+        [route],
       );
 
       return {
@@ -141,7 +141,7 @@ async function getResponseError(res: Response) {
 
 async function parseEventStream<T>(
   streamReader: ReadableStream<Uint8Array>,
-  transformer: Transformer
+  transformer: Transformer,
 ) {
   const eventStream = streamReader
     .pipeThrough(new TextDecoderStream())

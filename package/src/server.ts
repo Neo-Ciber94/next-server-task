@@ -15,7 +15,7 @@ const encoder = new TextEncoder();
 
 type RequestHandler = (
   req: Request,
-  params: { params: Record<string, string | undefined> }
+  params: { params: Record<string, string | undefined> },
 ) => Promise<Response>;
 
 /**
@@ -75,7 +75,7 @@ class ServerTaskBuilder<TRoute extends string> {
    * Adds the action to execute when this task is called and returns the `ServerTask`.
    */
   withAction<TReturn, TInput = undefined>(
-    action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>
+    action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>,
   ): ServerTask<TReturn, TInput, TRoute> {
     const _route = this.route;
     const _transformer = this.transformer;
@@ -117,7 +117,7 @@ export function createTask<TRoute extends string>(route: TRoute) {
 
 function createServerHandler<TReturn, TInput>(
   transformer: Transformer,
-  action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>
+  action: (input: TInput, ctx: ServerTaskContext) => Promise<TReturn>,
 ) {
   if (!isEdgeRuntime()) {
     throw new Error(`Server tasks can only be used in the 'edge-runtime'. To enable it, add in your api route:
@@ -128,7 +128,7 @@ function createServerHandler<TReturn, TInput>(
 
   return async (
     req: Request,
-    { params }: { params: Record<string, string | undefined> }
+    { params }: { params: Record<string, string | undefined> },
   ) => {
     try {
       const input = await getInput<TInput>(req, transformer);
@@ -176,7 +176,7 @@ type EventStreamOptions<TReturn, TInput> = {
 };
 
 function createEventStream<TReturn, TInput>(
-  opts: EventStreamOptions<TReturn, TInput>
+  opts: EventStreamOptions<TReturn, TInput>,
 ) {
   const { input, action, transformer, waitInterval = 300, req, params } = opts;
 
@@ -243,7 +243,7 @@ function createEventStream<TReturn, TInput>(
 
 async function getInput<TInput>(
   req: Request,
-  transformer: Transformer
+  transformer: Transformer,
 ): Promise<TInput | undefined> {
   if (req.method === "GET" || req.method === "HEAD") {
     const { searchParams } = new URL(req.url);
