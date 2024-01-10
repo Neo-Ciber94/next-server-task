@@ -23,11 +23,13 @@
   ],
   "dependencies": {
     "eventsource-parser": "^1.1.1",
-    "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18.2.28"
+  },
+  "peerDependencies": {
+    "react": ">=18"
   },
   "exports": {
     "./package.json": "./package.json",
