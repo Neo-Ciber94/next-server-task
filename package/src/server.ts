@@ -136,7 +136,7 @@ function createServerHandler<TReturn, TInput>(
       const data = await getInput<TInput>(req, transformer);
 
       if (!data) {
-        return new Response(undefined, { status: 429 });
+        return new Response(undefined, { status: 400 });
       }
 
       const stream = createEventStream({
@@ -251,7 +251,7 @@ async function getInput<TInput>(
     const rawInput = searchParams.get("input");
 
     if (rawInput == null) {
-      throw new Error("Unable to get action input from the request");
+      return { input: undefined } as { input: TInput };
     }
 
     const input = transformer.parse(rawInput) as TInput;
