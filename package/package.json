@@ -22,7 +22,7 @@
     "rpc"
   ],
   "dependencies": {
-    "eventsource-parser": "^1.1.1",
+    "eventsource-parser": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^20",
