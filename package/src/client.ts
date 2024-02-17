@@ -75,6 +75,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
      */
     useTask<R extends TRoute = TRoute>(route: R) {
       const [isMutating, setIsMutating] = useState(false);
+      const [data, setData] = useState<TReturn>();
 
       const mutate = useCallback(
         async (...args: Args) => {
@@ -83,6 +84,7 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
 
           try {
             const result = await receiveStream(route, input);
+            setData(result);
             return result;
           } finally {
             setIsMutating(false);
@@ -92,8 +94,20 @@ export function createClient<T extends ServerTask<unknown, unknown, string>>(
       );
 
       return {
+        /**
+         * Execute the server task with the given arguments.
+         */
         mutate,
+
+        /**
+         * Wether if the server task is executing.
+         */
         isMutating,
+
+        /**
+         * The last data received from the server task.
+         */
+        data,
       };
     },
   };
@@ -112,12 +126,16 @@ async function fetchEventStream<TInput>({
 }) {
   const { headers: requestHeaders, ...requestInitRest } = requestInit || {};
 
-  // prettier-ignore
-  const path = method === "GET" ? `${route}?input=${JSON.stringify(input)}` : route;
+  let url = route;
+
+  if (input && method === "GET") {
+    url += `?input=${JSON.stringify(input)}`;
+  }
+
   const body = method === "GET" ? undefined : JSON.stringify({ input });
   const headers = new Headers(requestHeaders);
 
-  const res = await fetch(path, {
+  const res = await fetch(url, {
     ...requestInitRest,
     headers,
     method,

@@ -1,6 +1,6 @@
 {
   "name": "next-server-task",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Provides a mechanism for executing long running tasks on NextJS edge api-handlers",
   "author": "Freddy L.",
   "module": "dist/index.js",
